@@ -21,11 +21,13 @@ pub struct OpdHeader {
     pub directive: OpdHeaderDirective,
 }
 
+#[derive(Clone)]
 pub struct Frame<T> {
     pub time: f32,
     pub data: Vec<T>,
 }
 
+#[derive(Clone)]
 pub enum Frames {
     U8(Vec<Frame<u8>>),
     U16(Vec<Frame<u16>>),
