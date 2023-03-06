@@ -62,6 +62,11 @@ pub struct OpdHeaderDirectiveOrigin {
     pub y: f32,
     pub z: f32,
 }
+impl From<OpdHeaderDirectiveOrigin> for Vec3 {
+    fn from(value: OpdHeaderDirectiveOrigin) -> Self {
+        Vec3 { x: value.x, y: value.y, z: value.z }
+    }
+}
 
 #[derive(Deserialize, Debug)]
 pub struct OpdHeaderDirectiveMeta {
