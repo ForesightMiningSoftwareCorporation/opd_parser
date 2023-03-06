@@ -29,10 +29,10 @@ pub struct Frame<T> {
 
 #[derive(Clone)]
 pub enum Frames {
-    U8(Vec<Frame<u8>>),
-    U16(Vec<Frame<u16>>),
-    U32(Vec<Frame<u32>>),
-    U64(Vec<Frame<u64>>),
+    I8(Vec<Frame<i8>>),
+    I16(Vec<Frame<i16>>),
+    I32(Vec<Frame<i32>>),
+    I64(Vec<Frame<i64>>),
 }
 
 #[derive(Deserialize, Debug)]

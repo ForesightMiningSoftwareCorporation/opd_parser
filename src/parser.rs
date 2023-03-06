@@ -2,7 +2,7 @@ use glam::Vec3;
 use nom::{
     bytes::complete::tag,
     multi::{count, length_data, many1},
-    number::complete::{be_f32, be_u16, be_u32, be_u64, be_u8},
+    number::complete::{be_f32, be_i16, be_i32, be_i64, be_i8, be_u32},
     IResult,
 };
 
@@ -14,7 +14,6 @@ pub fn parse(input: &[u8]) -> IResult<&[u8], OpdFile> {
     let (input, json_header) = length_data(be_u32)(input)?;
     let header: crate::OpdHeader = serde_json::from_slice(json_header).unwrap();
 
-    println!("{:?}", header);
     let (mut input, centroids) = count(parse_centroid, header.directive.num_centroids)(input)?;
 
     let _base_offset = header.directive.num_centroids * 4 * 4;
@@ -22,24 +21,24 @@ pub fn parse(input: &[u8]) -> IResult<&[u8], OpdFile> {
 
     let frames = match header.directive.precision {
         1 => {
-            let (next_input, frames) = parse_frame(input, &header, be_u8)?;
+            let (next_input, frames) = parse_frame(input, &header, be_i8)?;
             input = next_input;
-            Frames::U8(frames)
+            Frames::I8(frames)
         }
         2 => {
-            let (next_input, frames) = parse_frame(input, &header, be_u16)?;
+            let (next_input, frames) = parse_frame(input, &header, be_i16)?;
             input = next_input;
-            Frames::U16(frames)
+            Frames::I16(frames)
         }
         4 => {
-            let (next_input, frames) = parse_frame(input, &header, be_u32)?;
+            let (next_input, frames) = parse_frame(input, &header, be_i32)?;
             input = next_input;
-            Frames::U32(frames)
+            Frames::I32(frames)
         }
         8 => {
-            let (next_input, frames) = parse_frame(input, &header, be_u64)?;
+            let (next_input, frames) = parse_frame(input, &header, be_i64)?;
             input = next_input;
-            Frames::U64(frames)
+            Frames::I64(frames)
         }
         _ => {
             unimplemented!()
