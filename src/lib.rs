@@ -27,6 +27,40 @@ pub struct Frame<T> {
     pub data: Vec<T>,
 }
 
+impl<T: Copy> Frame<T> {
+    pub fn frame_as_vec3a(&self) -> impl Iterator<Item = Vec3> + '_ where T: Into<f32> {
+        let iter = self.data.iter();
+        FrameIterator {
+            iter
+        }
+    }
+}
+pub struct FrameIterator<'a, T> {
+    iter: std::slice::Iter<'a, T>,
+}
+impl<'a, T: Copy> Iterator for FrameIterator<'a, T> where T: Into<f32> {
+    type Item = Vec3;
+    fn next(&mut self) -> Option<Self::Item> {
+        let max_value: usize = (1 << (std::mem::size_of::<T>() * 8 - 1)) - 1;
+        let max_value = max_value as f32;
+        let arr: [f32; 3] = [
+            match self.iter.next() {
+                Some(a) => (*a).into() / max_value,
+                None => return None,
+            },
+            match self.iter.next() {
+                Some(a) => (*a).into() / max_value,
+                None => return None,
+            },
+            match self.iter.next() {
+                Some(a) => (*a).into() / max_value,
+                None => return None,
+            },
+        ];
+        Some(arr.into())
+    }
+}
+
 #[derive(Clone)]
 pub enum Frames {
     I8(Vec<Frame<i8>>),
