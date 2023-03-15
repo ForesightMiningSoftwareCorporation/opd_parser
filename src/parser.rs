@@ -71,7 +71,7 @@ pub fn parse_frame<'a, T>(
         let end = (frame[1].offset - base_offset) / header.directive.precision;
         let len = end - start;
 
-        let (new_input, data) = count(number_parser, len as usize)(input)?;
+        let (new_input, data) = count(number_parser, len)(input)?;
         input = new_input;
         frames.push(Frame {
             time: frame[0].time,
