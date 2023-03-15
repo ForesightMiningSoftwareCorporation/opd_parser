@@ -28,17 +28,21 @@ pub struct Frame<T> {
 }
 
 impl<T: Copy> Frame<T> {
-    pub fn frame_as_vec3a(&self) -> impl Iterator<Item = Vec3> + '_ where T: Into<f32> {
+    pub fn frame_as_vec3a(&self) -> impl Iterator<Item = Vec3> + '_
+    where
+        T: Into<f32>,
+    {
         let iter = self.data.iter();
-        FrameIterator {
-            iter
-        }
+        FrameIterator { iter }
     }
 }
 pub struct FrameIterator<'a, T> {
     iter: std::slice::Iter<'a, T>,
 }
-impl<'a, T: Copy> Iterator for FrameIterator<'a, T> where T: Into<f32> {
+impl<'a, T: Copy> Iterator for FrameIterator<'a, T>
+where
+    T: Into<f32>,
+{
     type Item = Vec3;
     fn next(&mut self) -> Option<Self::Item> {
         let max_value: usize = (1 << (std::mem::size_of::<T>() * 8 - 1)) - 1;
@@ -98,7 +102,11 @@ pub struct OpdHeaderDirectiveOrigin {
 }
 impl From<OpdHeaderDirectiveOrigin> for Vec3 {
     fn from(value: OpdHeaderDirectiveOrigin) -> Self {
-        Vec3 { x: value.x, y: value.y, z: value.z }
+        Vec3 {
+            x: value.x,
+            y: value.y,
+            z: value.z,
+        }
     }
 }
 
