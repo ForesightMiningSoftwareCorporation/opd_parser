@@ -1,16 +1,22 @@
+name: Release Pipeline
+
 on:
+  pull_request:
   push:
     branches:
       - master
+  workflow_dispatch:
+    inputs:
+      publish:
+        type: boolean
+        required: false
+        description: Trigger with publish
 
 jobs:
   publish-private-create:
-    uses: ForesightMiningSoftwareCorporation/github/.github/workflows/publish-rust-crate.yml@v1.0.0
+    uses: ForesightMiningSoftwareCorporation/github/.github/workflows/rust-build.yml@v1.1.0
     with:
-      private-registry-host: ssh.shipyard.rs
-      private-registry-name: foresight-mining-software-corporation
-    secrets:
-      github-token: ${{ secrets.GITHUB_TOKEN }}
-      private-registry-private-key: ${{ secrets.CARGO_PRIVATE_REGISTRY_SSH_PRIVATE_KEY }}
-      private-registry-token: ${{ secrets.CARGO_PRIVATE_REGISTRY_TOKEN }}
-      discord-webhook: ${{ secrets.DISCORD_WEBHOOK }}
+      skip-test: ${{ github.event_name == 'push' && 'true' || 'false' }}
+      publish: ${{ (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.publish)) && 'true' || 'false' }}
+      publish_private_registry: true
+    secrets: inherit
