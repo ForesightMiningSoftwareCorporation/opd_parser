@@ -1,8 +1,5 @@
 mod parser;
 
-#[macro_use]
-extern crate serde;
-
 use glam::Vec3;
 pub use parser::parse;
 use serde::Deserialize;
