@@ -1,8 +1,8 @@
 mod parser;
 
-use glam::Vec3;
+pub use glam::Vec3;
 pub use parser::parse;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 pub struct OpdFile {
     pub header: OpdHeader,
@@ -10,7 +10,7 @@ pub struct OpdFile {
     pub frames: Frames,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Serialize)]
 pub struct OpdHeader {
     pub version: String,
     #[serde(rename = "type")]
@@ -70,13 +70,13 @@ pub enum Frames {
     I64(Vec<Frame<i64>>),
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Serialize, Clone)]
 pub struct FrameMeta {
     pub time: f32,
     pub offset: usize,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Serialize)]
 pub struct OpdHeaderDirective {
     pub version: String,
     pub meta: OpdHeaderDirectiveMeta,
@@ -91,7 +91,7 @@ pub struct OpdHeaderDirective {
     pub frames: Vec<FrameMeta>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Serialize)]
 pub struct OpdHeaderDirectiveOrigin {
     pub x: f32,
     pub y: f32,
@@ -107,7 +107,7 @@ impl From<OpdHeaderDirectiveOrigin> for Vec3 {
     }
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Serialize)]
 pub struct OpdHeaderDirectiveMeta {
     #[serde(rename = "projectId")]
     pub project_id: String,
