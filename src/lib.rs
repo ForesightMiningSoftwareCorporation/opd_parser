@@ -82,7 +82,11 @@ pub struct OpdHeaderDirective {
     pub meta: OpdHeaderDirectiveMeta,
 
     #[serde(rename = "numCentroids")]
-    pub num_centroids: usize,
+    pub num_centroids: Option<usize>,
+
+    
+    #[serde(rename = "numPoints")]
+    pub num_points: Option<usize>,
 
     pub origin: OpdHeaderDirectiveOrigin,
 
