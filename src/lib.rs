@@ -89,6 +89,10 @@ pub struct OpdHeaderDirective {
     pub precision: usize,
     pub scale: Vec3,
     pub frames: Vec<FrameMeta>,
+
+    pub index: Option<bool>,
+    #[serde(rename = "subCentroids")]
+    pub sub_centroids: Option<bool>
 }
 
 #[derive(Deserialize, Debug, Serialize)]
