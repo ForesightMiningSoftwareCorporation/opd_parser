@@ -13,6 +13,7 @@ pub struct OpdFile {
 #[derive(Deserialize, Debug, Serialize)]
 pub struct OpdHeader {
     pub version: String,
+    pub compressed: Option<String>,
     #[serde(rename = "type")]
     pub ty: String,
     pub directive: OpdHeaderDirective,
