@@ -18,5 +18,5 @@ jobs:
     with:
       skip-test: ${{ github.event_name == 'push' && 'true' || 'false' }}
       publish: ${{ (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.publish)) && 'true' || 'false' }}
-      publish_private_registry: true
+      publish_public_registry: true
     secrets: inherit
