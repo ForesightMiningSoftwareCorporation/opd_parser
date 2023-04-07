@@ -14,9 +14,10 @@ pub fn parse(input: &[u8]) -> IResult<&[u8], OpdFile> {
     let (input, json_header) = length_data(be_u32)(input)?;
     let header: crate::OpdHeader = serde_json::from_slice(json_header).unwrap();
 
-    let (mut input, centroids) = count(parse_centroid, header.directive.num_centroids)(input)?;
+    let (mut input, centroids) =
+        count(parse_centroid, header.directive.num_centroids.unwrap())(input)?;
 
-    let _base_offset = header.directive.num_centroids * 4 * 4;
+    let _base_offset = header.directive.num_centroids.unwrap() * 4 * 4;
     let _frame_data_len = header.directive.precision * 3;
 
     let frames = match header.directive.precision {
@@ -63,7 +64,7 @@ pub fn parse_frame<'a, T>(
     number_parser: NumberParser<'a, T>,
 ) -> IResult<&'a [u8], Vec<Frame<T>>> {
     assert_eq!(header.directive.precision, std::mem::size_of::<T>());
-    let base_offset = header.directive.num_centroids * 4 * 4;
+    let base_offset = header.directive.num_centroids.unwrap() * 4 * 4;
 
     let mut frames = Vec::with_capacity(header.directive.frames.len());
     for frame in header.directive.frames.windows(2) {

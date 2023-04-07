@@ -1,8 +1,8 @@
 mod parser;
 
-use glam::Vec3;
+pub use glam::Vec3;
 pub use parser::parse;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 pub struct OpdFile {
     pub header: OpdHeader,
@@ -10,9 +10,10 @@ pub struct OpdFile {
     pub frames: Frames,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Serialize)]
 pub struct OpdHeader {
     pub version: String,
+    pub compressed: Option<String>,
     #[serde(rename = "type")]
     pub ty: String,
     pub directive: OpdHeaderDirective,
@@ -70,28 +71,38 @@ pub enum Frames {
     I64(Vec<Frame<i64>>),
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Serialize, Clone)]
 pub struct FrameMeta {
     pub time: f32,
     pub offset: usize,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Serialize)]
 pub struct OpdHeaderDirective {
     pub version: String,
     pub meta: OpdHeaderDirectiveMeta,
 
     #[serde(rename = "numCentroids")]
-    pub num_centroids: usize,
+    pub num_centroids: Option<usize>,
+
+    #[serde(rename = "numPoints")]
+    pub num_points: Option<usize>,
 
     pub origin: OpdHeaderDirectiveOrigin,
 
     pub precision: usize,
     pub scale: Vec3,
     pub frames: Vec<FrameMeta>,
+
+    pub index: Option<bool>,
+    #[serde(rename = "subCentroids")]
+    pub sub_centroids: Option<bool>,
+
+    #[serde(rename = "lastFrameCorrected")]
+    pub last_frame_corrected: Option<bool>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Serialize)]
 pub struct OpdHeaderDirectiveOrigin {
     pub x: f32,
     pub y: f32,
@@ -107,7 +118,7 @@ impl From<OpdHeaderDirectiveOrigin> for Vec3 {
     }
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Serialize)]
 pub struct OpdHeaderDirectiveMeta {
     #[serde(rename = "projectId")]
     pub project_id: String,
