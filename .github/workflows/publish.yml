@@ -16,7 +16,7 @@ jobs:
   publish-private-create:
     uses: ForesightMiningSoftwareCorporation/github/.github/workflows/rust-build.yml@v1.1.0
     with:
-      skip-test: ${{ github.event_name == 'push' && 'true' || 'false' }}
+      skip-test: ${{ github.event_name == 'push' && 'true' || (github.event_name == 'workflow_dispatch' && inputs.publish) }}
       publish: ${{ (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.publish)) && 'true' || 'false' }}
       publish_public_registry: true
     secrets: inherit
