@@ -85,7 +85,6 @@ pub struct OpdHeaderDirective {
     #[serde(rename = "numCentroids")]
     pub num_centroids: Option<usize>,
 
-    
     #[serde(rename = "numPoints")]
     pub num_points: Option<usize>,
 
@@ -100,7 +99,7 @@ pub struct OpdHeaderDirective {
     pub sub_centroids: Option<bool>,
 
     #[serde(rename = "lastFrameCorrected")]
-    pub last_frame_corrected: Option<bool>
+    pub last_frame_corrected: Option<bool>,
 }
 
 #[derive(Deserialize, Debug, Serialize)]
