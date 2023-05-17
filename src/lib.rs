@@ -25,18 +25,24 @@ pub struct Frame<T> {
     pub data: Vec<T>,
 }
 
-impl<T: Copy> Frame<T> {
-    pub fn frame_as_vec3a(&self) -> impl Iterator<Item = [f32; 3]> + '_
-    where
-        T: Into<f32>,
-    {
-        let iter = self.data.iter();
-        FrameIterator { iter }
+impl<'a, T> IntoIterator for &'a Frame<T>
+where
+    T: Copy + Into<f32>,
+{
+    type IntoIter = FrameIterator<'a, T>;
+    type Item = [f32; 3];
+
+    fn into_iter(self) -> Self::IntoIter {
+        FrameIterator {
+            iter: self.data.iter(),
+        }
     }
 }
+
 pub struct FrameIterator<'a, T> {
     iter: std::slice::Iter<'a, T>,
 }
+
 impl<'a, T: Copy> Iterator for FrameIterator<'a, T>
 where
     T: Into<f32>,
