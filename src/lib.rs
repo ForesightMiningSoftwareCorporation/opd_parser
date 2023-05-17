@@ -1,7 +1,7 @@
 mod parser;
 
-pub use glam::Vec3;
 pub use parser::parse;
+
 use serde::{Deserialize, Serialize};
 
 pub struct OpdFile {
@@ -25,23 +25,30 @@ pub struct Frame<T> {
     pub data: Vec<T>,
 }
 
-impl<T: Copy> Frame<T> {
-    pub fn frame_as_vec3a(&self) -> impl Iterator<Item = Vec3> + '_
-    where
-        T: Into<f32>,
-    {
-        let iter = self.data.iter();
-        FrameIterator { iter }
+impl<'a, T> IntoIterator for &'a Frame<T>
+where
+    T: Copy + Into<f32>,
+{
+    type IntoIter = FrameIterator<'a, T>;
+    type Item = [f32; 3];
+
+    fn into_iter(self) -> Self::IntoIter {
+        FrameIterator {
+            iter: self.data.iter(),
+        }
     }
 }
+
 pub struct FrameIterator<'a, T> {
     iter: std::slice::Iter<'a, T>,
 }
+
 impl<'a, T: Copy> Iterator for FrameIterator<'a, T>
 where
     T: Into<f32>,
 {
-    type Item = Vec3;
+    type Item = [f32; 3];
+
     fn next(&mut self) -> Option<Self::Item> {
         let max_value: usize = (1 << (std::mem::size_of::<T>() * 8 - 1)) - 1;
         let max_value = max_value as f32;
@@ -59,7 +66,7 @@ where
                 None => return None,
             },
         ];
-        Some(arr.into())
+        Some(arr)
     }
 }
 
@@ -91,7 +98,7 @@ pub struct OpdHeaderDirective {
     pub origin: OpdHeaderDirectiveOrigin,
 
     pub precision: usize,
-    pub scale: Vec3,
+    pub scale: [f32; 3],
     pub frames: Vec<FrameMeta>,
 
     pub index: Option<bool>,
@@ -108,13 +115,10 @@ pub struct OpdHeaderDirectiveOrigin {
     pub y: f32,
     pub z: f32,
 }
-impl From<OpdHeaderDirectiveOrigin> for Vec3 {
+
+impl From<OpdHeaderDirectiveOrigin> for [f32; 3] {
     fn from(value: OpdHeaderDirectiveOrigin) -> Self {
-        Vec3 {
-            x: value.x,
-            y: value.y,
-            z: value.z,
-        }
+        [value.x, value.y, value.z]
     }
 }
 
@@ -131,5 +135,5 @@ pub struct Centroid {
     pub parent_id: u32,
 
     /// Relative to origin defined in header
-    pub offset: Vec3,
+    pub offset: [f32; 3],
 }

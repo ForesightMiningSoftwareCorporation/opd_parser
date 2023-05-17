@@ -1,4 +1,3 @@
-use glam::Vec3;
 use nom::{
     bytes::complete::tag,
     multi::{count, length_data, many1},
@@ -100,7 +99,7 @@ pub fn parse_centroid(input: &[u8]) -> IResult<&[u8], Centroid> {
         input,
         Centroid {
             parent_id,
-            offset: Vec3::new(x, y, z),
+            offset: [x, y, z],
         },
     ))
 }
