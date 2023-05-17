@@ -12,6 +12,5 @@ repository = "https://github.com/ForesightMiningSoftwareCorporation/opd_parser"
 
 [dependencies]
 nom = "7"
-glam = { version = "0.22", features = ["serde"] }
 serde_json = "1"
 serde = { version = "1", features = ["derive"] }
