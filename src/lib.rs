@@ -111,12 +111,12 @@ pub struct OpdHeaderDirective {
 
 #[derive(Deserialize, Debug, Serialize)]
 pub struct OpdHeaderDirectiveOrigin {
-    pub x: f32,
-    pub y: f32,
-    pub z: f32,
+    pub x: f64,
+    pub y: f64,
+    pub z: f64,
 }
 
-impl From<OpdHeaderDirectiveOrigin> for [f32; 3] {
+impl From<OpdHeaderDirectiveOrigin> for [f64; 3] {
     fn from(value: OpdHeaderDirectiveOrigin) -> Self {
         [value.x, value.y, value.z]
     }
