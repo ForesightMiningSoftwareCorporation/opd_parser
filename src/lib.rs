@@ -91,6 +91,8 @@ pub struct OpdHeaderDirective {
 
     #[serde(rename = "numCentroids")]
     pub num_centroids: Option<usize>,
+    #[serde(rename = "hasCentroidVolumes")]
+    pub has_centroid_volumes: Option<bool>,
 
     #[serde(rename = "numPoints")]
     pub num_points: Option<usize>,
